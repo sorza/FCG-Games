@@ -1,7 +1,8 @@
-using FCG_Games.Infrasctructure.Shared.Context;
-using FCG_Games.Infrasctructure.Shared;
 using FCG_Games.Application.Shared;
+using FCG_Games.Infrasctructure.Shared;
+using FCG_Games.Infrasctructure.Shared.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace FCG_Games.Api
 {
@@ -11,7 +12,7 @@ namespace FCG_Games.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Registro de serviços
+            // Registro de serviï¿½os
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
 
@@ -21,7 +22,13 @@ namespace FCG_Games.Api
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             var app = builder.Build();
 
@@ -31,12 +38,10 @@ namespace FCG_Games.Api
                 var db = scope.ServiceProvider.GetRequiredService<GamesDbContext>();
                 db.Database.Migrate();
             }
+            
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();            
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

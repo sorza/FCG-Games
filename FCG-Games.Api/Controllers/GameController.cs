@@ -1,6 +1,5 @@
 using FCG_Games.Application.Games.Interfaces;
 using FCG_Games.Application.Games.Requests;
-using FCG_Games.Application.Games.Responses;
 using FCG_Games.Application.Shared.Results;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +9,11 @@ namespace FCG_Games.Api.Controllers
     [Route("[controller]")]
     public class GameController(IGameService service) : ControllerBase
     {
-
+        /// <summary>
+        /// Cadastra um novo jogo.
+        /// </summary>
+        /// <param name="request">Dados necess�rios para o cadastro do jogo.</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
         [HttpPost]
         public async Task<IResult> CreateGameAsync([FromBody] GameRequest request, CancellationToken cancellation = default)
         {
@@ -37,6 +40,11 @@ namespace FCG_Games.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Busca um jogo pelo seu ID.
+        /// </summary>
+        /// <param name="id">Id do jogo a ser buscado</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>        
         [HttpGet("{id:guid}")]
         public async Task<IResult> GetGameByIdAsync(Guid id, CancellationToken cancellation = default)
         {
@@ -59,6 +67,10 @@ namespace FCG_Games.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Busca todos os jogos cadastrados.
+        /// </summary>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
         [HttpGet]
         public async Task<IResult> GetAllGamesAsync(CancellationToken cancellation = default)
         {
@@ -77,6 +89,11 @@ namespace FCG_Games.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove um jogo pelo seu ID.
+        /// </summary>
+        /// <param name="id">Id do jogo a ser removido</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>        
         [HttpDelete("{id:guid}")]
         public async Task<IResult> DeleteGameAsync(Guid id, CancellationToken cancellation = default)
         {
@@ -99,6 +116,12 @@ namespace FCG_Games.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Atualiza os dados de um jogo pelo seu ID.
+        /// </summary>
+        /// <param name="id">Id do jogo a ser atualizado </param>
+        /// <param name="request">Novos dados que ser�o atribu�dos ao jogo</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
         [HttpPut("{id:guid}")]
         public async Task<IResult> UpdateGameAsync(Guid id, [FromBody] GameRequest request,  CancellationToken cancellation = default)
         {
