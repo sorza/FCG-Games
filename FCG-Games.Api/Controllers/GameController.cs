@@ -12,8 +12,11 @@ namespace FCG_Games.Api.Controllers
         /// <summary>
         /// Cadastra um novo jogo.
         /// </summary>
-        /// <param name="request">Dados necess�rios para o cadastro do jogo.</param>
-        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
+        /// <param name="request">Dados necessários para o cadastro do jogo.</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>       
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
         public async Task<IResult> CreateGameAsync([FromBody] GameRequest request, CancellationToken cancellation = default)
         {
@@ -21,22 +24,16 @@ namespace FCG_Games.Api.Controllers
             {
                 var result = await service.CreateGameAsync(request, cancellation);
 
-                if (result.IsFailure)
-                {
-                    return result.Error.Code switch
-                    {
-                        "409" => TypedResults.Conflict(new Error("409", result.Error.Message)),
-                        "404" => TypedResults.NotFound(new Error("404", result.Error.Message)),
-                        _ => TypedResults.BadRequest(new Error("400", result.Error.Message))
-                    };
-                }
+                IResult response = result.IsFailure
+                    ? TypedResults.Conflict(new Error("409", result.Error.Message))
+                    : TypedResults.Created($"/game/{result.Value.Id}", result.Value);
 
-                return TypedResults.Created($"/game/{result.Value.Id}", result.Value);
+                return response;
 
             }
             catch (Exception ex)
             {
-                return TypedResults.Problem(detail: ex.Message, statusCode: 500);
+                return TypedResults.BadRequest(new Error("400", ex.Message));
             }
         }
 
@@ -44,48 +41,47 @@ namespace FCG_Games.Api.Controllers
         /// Busca um jogo pelo seu ID.
         /// </summary>
         /// <param name="id">Id do jogo a ser buscado</param>
-        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>        
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("{id:guid}")]
         public async Task<IResult> GetGameByIdAsync(Guid id, CancellationToken cancellation = default)
         {
             try
             {
                 var result = await service.GetGameByIdAsync(id, cancellation);
-                if (result.IsFailure)
-                {
-                    return result.Error.Code switch
-                    {
-                        "404" => TypedResults.NotFound(new Error("404", result.Error.Message)),
-                        _ => TypedResults.BadRequest(new Error("400", result.Error.Message))
-                    };
-                }
-                return TypedResults.Ok(result.Value);
+
+                IResult response = result.IsFailure
+                    ? TypedResults.NotFound(new Error("404", result.Error.Message))
+                    : TypedResults.Ok(result.Value);
+
+                return response;
             }
             catch (Exception ex)
             {
-                return TypedResults.Problem(detail: ex.Message, statusCode: 500);
+                return TypedResults.BadRequest(new Error("400", ex.Message));
             }
         }
 
         /// <summary>
         /// Busca todos os jogos cadastrados.
         /// </summary>
-        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisiçãoo.</param>       
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet]
         public async Task<IResult> GetAllGamesAsync(CancellationToken cancellation = default)
         {
             try
             {
                 var result = await service.GetAllGamesAsync(cancellation);
-                if (result.IsFailure)
-                {
-                    return TypedResults.BadRequest(new Error("400", result.Error.Message));
-                }
+                
                 return TypedResults.Ok(result.Value);
             }
             catch (Exception ex)
             {
-                return TypedResults.Problem(detail: ex.Message, statusCode: 500);
+                return TypedResults.BadRequest(new Error("400", ex.Message));
             }
         }
 
@@ -94,25 +90,25 @@ namespace FCG_Games.Api.Controllers
         /// </summary>
         /// <param name="id">Id do jogo a ser removido</param>
         /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>        
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:guid}")]
         public async Task<IResult> DeleteGameAsync(Guid id, CancellationToken cancellation = default)
         {
             try
             {
                 var result = await service.DeleteGameAsync(id, cancellation);
-                if (result.IsFailure)
-                {
-                    return result.Error.Code switch
-                    {
-                        "404" => TypedResults.NotFound(new Error("404", result.Error.Message)),
-                        _ => TypedResults.BadRequest(new Error("400", result.Error.Message))
-                    };
-                }
-                return TypedResults.NoContent();
+
+                IResult response = result.IsFailure
+                    ? TypedResults.NotFound(new Error("404", result.Error.Message))
+                    : TypedResults.NoContent();
+
+                return response;
             }
             catch (Exception ex)
             {
-                return TypedResults.Problem(detail: ex.Message, statusCode: 500);
+                return TypedResults.BadRequest(new Error("400", ex.Message));
             }
         }
 
@@ -120,27 +116,27 @@ namespace FCG_Games.Api.Controllers
         /// Atualiza os dados de um jogo pelo seu ID.
         /// </summary>
         /// <param name="id">Id do jogo a ser atualizado </param>
-        /// <param name="request">Novos dados que ser�o atribu�dos ao jogo</param>
-        /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>       
+        /// <param name="request">Novos dados que serão atribu�dos ao jogo</param>
+        /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>    
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut("{id:guid}")]
         public async Task<IResult> UpdateGameAsync(Guid id, [FromBody] GameRequest request,  CancellationToken cancellation = default)
         {
             try
             {
                 var result = await service.UpdateGameAsync(id, request, cancellation);
-                if (result.IsFailure)
-                {
-                    return result.Error.Code switch
-                    {
-                        "404" => TypedResults.NotFound(new Error("404", result.Error.Message)),
-                        _ => TypedResults.BadRequest(new Error("400", result.Error.Message))
-                    };
-                }
-                return TypedResults.Ok(result.Value);
+
+                IResult response = result.IsFailure
+                    ? TypedResults.NotFound(new Error("404", result.Error.Message))
+                    : TypedResults.Ok(result.Value);
+
+                return response;
             }
             catch (Exception ex)
             {
-                return TypedResults.Problem(detail: ex.Message, statusCode: 500);
+                return TypedResults.BadRequest(new Error("400", ex.Message));
             }
         }
 

@@ -12,7 +12,7 @@ namespace FCG_Games.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Registro de servi�os
+            // Registro de serviços
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
 
