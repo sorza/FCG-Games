@@ -2,7 +2,7 @@
 using FCG_Games.Application.Games.Responses;
 using FCG_Games.Application.Shared.Results;
 
-namespace FCG_Games.Application.Games.Interfaces
+namespace FCG_Games.Application.Games.Services
 {
     public interface IGameService
     {

@@ -3,7 +3,6 @@ using FCG_Games.Domain.Games.Entities;
 using FCG_Games.Infrasctructure.Shared.Context;
 using FCG_Games.Infrasctructure.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace FCG_Games.Infrasctructure.Games.Repositories
 {

@@ -1,5 +1,4 @@
-﻿using FCG_Games.Application.Games.Interfaces;
-using FCG_Games.Application.Games.Requests;
+﻿using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Responses;
 using FCG_Games.Application.Shared.Interfaces.Repositories;
 using FCG_Games.Application.Shared.Results;

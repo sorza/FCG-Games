@@ -1,5 +1,4 @@
-﻿using FCG_Games.Application.Games.Interfaces;
-using FCG_Games.Application.Games.Requests;
+﻿using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Services;
 using FCG_Games.Application.Games.Validators;
 using FluentValidation;
