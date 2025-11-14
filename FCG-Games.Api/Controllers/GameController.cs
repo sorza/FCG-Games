@@ -1,5 +1,5 @@
 using FCG_Games.Application.Games.Requests;
-using FCG_Games.Application.Games.Services;
+using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Application.Shared.Results;
 using Microsoft.AspNetCore.Mvc;
 

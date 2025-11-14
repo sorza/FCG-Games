@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FCG_Games.Infrasctructure.Games.Mappings
+namespace FCG_Games.Infrastructure.Games.Mappings
 {
     internal class GameMap : IEntityTypeConfiguration<Game>
     {

@@ -1,6 +1,6 @@
 using FCG_Games.Application.Shared;
-using FCG_Games.Infrasctructure.Shared;
-using FCG_Games.Infrasctructure.Shared.Context;
+using FCG_Games.Infrastructure.Shared;
+using FCG_Games.Infrastructure.Shared.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -11,14 +11,9 @@ namespace FCG_Games.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Registro de serviços
-            builder.Services.AddInfrastructureServices();
+            
+            builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
-
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<GamesDbContext>(options =>
-                options.UseSqlServer(connectionString));
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -37,8 +32,7 @@ namespace FCG_Games.Api
             {
                 var db = scope.ServiceProvider.GetRequiredService<GamesDbContext>();
                 db.Database.Migrate();
-            }
-            
+            }           
 
             app.UseSwagger();
             app.UseSwaggerUI();            

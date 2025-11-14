@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FCG_Games.Infrasctructure.Migrations
+namespace FCG_Games.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

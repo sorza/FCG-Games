@@ -1,6 +1,6 @@
 ﻿using FCG_Games.Domain.Shared;
 
-namespace FCG_Games.Application.Shared.Interfaces.Repositories
+namespace FCG_Games.Application.Shared.Interfaces
 {
     public interface IRepository<T> where T : Entity
     {

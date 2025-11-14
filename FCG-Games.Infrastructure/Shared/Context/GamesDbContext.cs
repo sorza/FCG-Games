@@ -1,8 +1,8 @@
 ﻿using FCG_Games.Domain.Games.Entities;
-using FCG_Games.Infrasctructure.Games.Mappings;
+using FCG_Games.Infrastructure.Games.Mappings;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG_Games.Infrasctructure.Shared.Context
+namespace FCG_Games.Infrastructure.Shared.Context
 {
     public class GamesDbContext(DbContextOptions<GamesDbContext> options) : DbContext(options)
     {

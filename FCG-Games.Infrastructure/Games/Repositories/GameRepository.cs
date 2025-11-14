@@ -1,10 +1,10 @@
-﻿using FCG_Games.Application.Shared.Interfaces.Repositories;
+﻿using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Domain.Games.Entities;
-using FCG_Games.Infrasctructure.Shared.Context;
-using FCG_Games.Infrasctructure.Shared.Repositories;
+using FCG_Games.Infrastructure.Shared.Context;
+using FCG_Games.Infrastructure.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG_Games.Infrasctructure.Games.Repositories
+namespace FCG_Games.Infrastructure.Games.Repositories
 {
     public class GameRepository : GenericRepository<Game>, IGameRepository
     {

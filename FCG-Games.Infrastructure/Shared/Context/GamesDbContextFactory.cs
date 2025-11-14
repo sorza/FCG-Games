@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace FCG_Games.Infrasctructure.Shared.Context
+namespace FCG_Games.Infrastructure.Shared.Context
 {
     public class GamesDbContextFactory : IDesignTimeDbContextFactory<GamesDbContext>
     {

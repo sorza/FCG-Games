@@ -1,9 +1,9 @@
-﻿using FCG_Games.Application.Shared.Interfaces.Repositories;
+﻿using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Domain.Shared;
-using FCG_Games.Infrasctructure.Shared.Context;
+using FCG_Games.Infrastructure.Shared.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG_Games.Infrasctructure.Shared.Repositories
+namespace FCG_Games.Infrastructure.Shared.Repositories
 {
     public class GenericRepository<T>(GamesDbContext context) : IRepository<T> where T : Entity
     {

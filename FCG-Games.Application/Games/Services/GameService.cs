@@ -1,6 +1,6 @@
 ﻿using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Responses;
-using FCG_Games.Application.Shared.Interfaces.Repositories;
+using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Application.Shared.Results;
 using FCG_Games.Domain.Games.Entities;
 using FluentValidation;
@@ -8,7 +8,8 @@ using FluentValidation;
 namespace FCG_Games.Application.Games.Services
 {
     public class GameService(IGameRepository repository, 
-                             IValidator<GameRequest> validator) : IGameService
+                             IValidator<GameRequest> validator,
+                             IEventPublisher publisher) : IGameService
     {
         public async Task<Result<GameResponse>> CreateGameAsync(GameRequest request, CancellationToken cancellationToken = default)
         {
@@ -22,7 +23,10 @@ namespace FCG_Games.Application.Games.Services
                 return Result.Failure<GameResponse>(new Error("409", "Este jogo já está cadastrado"));
 
             await repository.AddAsync(game, cancellationToken);
-            
+
+            var evt = new GameCreatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre);
+            await publisher.PublishAsync(evt, "GameCreated");
+
             return Result.Success(Parse(game));
 
         }
@@ -32,6 +36,9 @@ namespace FCG_Games.Application.Games.Services
             var game = await GetGameByIdAsync(id, cancellationToken);
 
             await repository.DeleteAsync(id, cancellationToken);
+
+            var evt = new GameDeletedEvent(id);
+            await publisher.PublishAsync(evt, "GameDeleted");
 
             return Result.Success(game);
 
@@ -69,6 +76,9 @@ namespace FCG_Games.Application.Games.Services
 
             game.Update(request.Title, request.Price, request.LaunchYear, request.Developer, request.Genre);
             await repository.UpdateAsync(game, cancellationToken);
+
+            var evt = new GameUpdatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre);
+            await publisher.PublishAsync(evt, "GameUpdated");
 
             return Result.Success(Parse(game));
         }
