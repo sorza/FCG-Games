@@ -1,4 +1,5 @@
-﻿using FCG_Games.Application.Games.Requests;
+﻿using FCG.Shared.Contracts;
+using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Responses;
 using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Application.Shared.Results;
@@ -24,7 +25,7 @@ namespace FCG_Games.Application.Games.Services
 
             await repository.AddAsync(game, cancellationToken);
 
-            var evt = new GameCreatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre);
+            var evt = new GameCreatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre.ToString());
             await publisher.PublishAsync(evt, "GameCreated");
 
             return Result.Success(Parse(game));
@@ -77,7 +78,7 @@ namespace FCG_Games.Application.Games.Services
             game.Update(request.Title, request.Price, request.LaunchYear, request.Developer, request.Genre);
             await repository.UpdateAsync(game, cancellationToken);
 
-            var evt = new GameUpdatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre);
+            var evt = new GameUpdatedEvent(game.Id, game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre.ToString());
             await publisher.PublishAsync(evt, "GameUpdated");
 
             return Result.Success(Parse(game));
