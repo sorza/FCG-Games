@@ -60,12 +60,25 @@ namespace FCG_Games.Api
                 });
             });
 
-            // Aplica migrations
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<GamesDbContext>();
-                db.Database.Migrate();
-            }           
+
+                var retries = 5;
+                while (retries > 0)
+                {
+                    try
+                    {
+                        db.Database.Migrate();
+                        break;
+                    }
+                    catch
+                    {
+                        retries--;
+                        Thread.Sleep(2000); 
+                    }
+                }
+            }         
 
             app.UseSwagger();
             app.UseSwaggerUI();            
