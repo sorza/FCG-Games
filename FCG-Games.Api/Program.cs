@@ -13,6 +13,7 @@ namespace FCG_Games.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.WebHost.UseUrls("http://0.0.0.0:80");
             
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
@@ -87,9 +88,19 @@ namespace FCG_Games.Api
             app.UseSwagger();
             app.UseSwaggerUI();            
 
-            app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
+            app.MapGet("/health", () =>
+            {
+                return Results.Ok(new
+                {
+                    status = "Healthy",
+                    timestamp = DateTime.UtcNow
+                });
+            });
+            
             app.Run();
         }
     }
