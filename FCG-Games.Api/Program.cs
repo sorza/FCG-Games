@@ -27,9 +27,13 @@ namespace FCG_Games.Api
                 c.IncludeXmlComments(xmlPath);
             });
 
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(80); 
+            });
+
             var app = builder.Build();
 
-            // Handler de erros globais
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(async context =>
