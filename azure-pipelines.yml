@@ -1,0 +1,29 @@
+trigger:
+- main
+
+pool:
+  name: 'LocalPool'
+
+variables:
+  acrName: 'fcgregistries.azurecr.io'
+  dockerRegistryServiceConnection: '576941a1-c337-49cf-af7a-81750fcd6af9'
+  tag: '$(Build.BuildId)'
+  buildContext: '$(Build.SourcesDirectory)'
+
+stages:
+- stage: BuildAndPush
+  displayName: Build and Push Images
+  jobs:
+  - job: BuildApi
+    displayName: Build Games API
+    steps:
+    - task: Docker@2
+      displayName: Build and Push API Image
+      inputs:
+        command: buildAndPush
+        repository: 'fcg-games-api'
+        dockerfile: '$(Build.SourcesDirectory)/FCG-Games.Api/Dockerfile'
+        containerRegistry: $(dockerRegistryServiceConnection)
+        buildContext: $(buildContext)
+        tags: |
+          $(tag)
