@@ -1,11 +1,11 @@
 ﻿using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Responses;
 using FCG_Games.Application.Shared.Interfaces;
-using FCG_Games.Application.Shared.Results;
 using FCG_Games.Domain.Games.Entities;
 using FluentValidation;
 using FCG.Shared.Contracts.Interfaces;
 using FCG.Shared.Contracts.Events.Games;
+using FCG.Shared.Contracts.Results;
 namespace FCG_Games.Application.Games.Services
 {
     public class GameService(IGameRepository repository,

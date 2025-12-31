@@ -1,4 +1,4 @@
-﻿using FCG_Games.Domain.Shared;
+﻿using FCG.Shared.Contracts.ClassDefinition;
 
 namespace FCG_Games.Application.Shared.Interfaces
 {

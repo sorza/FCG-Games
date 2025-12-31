@@ -1,5 +1,5 @@
-﻿using FCG_Games.Application.Shared.Interfaces;
-using FCG_Games.Domain.Shared;
+﻿using FCG.Shared.Contracts.ClassDefinition;
+using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Infrastructure.Shared.Context;
 using Microsoft.EntityFrameworkCore;
 

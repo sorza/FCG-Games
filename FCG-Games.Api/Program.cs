@@ -39,7 +39,6 @@ namespace FCG_Games.Api
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
-
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<GamesDbContext>();

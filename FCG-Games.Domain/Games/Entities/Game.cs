@@ -1,7 +1,7 @@
-﻿using FCG_Games.Domain.Games.Enums;
+﻿using FCG.Shared.Contracts.ClassDefinition;
+using FCG_Games.Domain.Games.Enums;
 using FCG_Games.Domain.Games.Exceptions;
 using FCG_Games.Domain.Games.Exceptions.Game;
-using FCG_Games.Domain.Shared;
 
 namespace FCG_Games.Domain.Games.Entities
 {

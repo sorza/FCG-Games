@@ -1,6 +1,6 @@
-﻿using FCG_Games.Application.Games.Requests;
+﻿using FCG.Shared.Contracts.Results;
+using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Games.Responses;
-using FCG_Games.Application.Shared.Results;
 
 namespace FCG_Games.Application.Shared.Interfaces
 {

@@ -1,6 +1,6 @@
+using FCG.Shared.Contracts.Results;
 using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Shared.Interfaces;
-using FCG_Games.Application.Shared.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG_Games.Api.Controllers
