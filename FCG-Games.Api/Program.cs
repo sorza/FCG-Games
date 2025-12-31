@@ -37,36 +37,8 @@ namespace FCG_Games.Api
             var app = builder.Build();
 
             app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
-            app.UseExceptionHandler(errorApp =>
-            {
-                errorApp.Run(async context =>
-                {
-                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                    var ex = exceptionHandlerPathFeature?.Error;
-
-                    context.Response.ContentType = "application/problem+json";
-
-                    var statusCode = ex switch
-                    {
-                        NotImplementedException => StatusCodes.Status501NotImplemented,
-                        TimeoutException => StatusCodes.Status504GatewayTimeout,
-                        InvalidOperationException => StatusCodes.Status502BadGateway,
-                        _ => StatusCodes.Status500InternalServerError
-                    };
-
-                    context.Response.StatusCode = statusCode;
-
-                    var problem = new ProblemDetails
-                    {
-                        Status = statusCode,
-                        Title = "Erro interno",
-                        Detail = "Ocorreu um erro inesperado. Tente novamente mais tarde."
-                    };
-
-                    await context.Response.WriteAsJsonAsync(problem);
-                });
-            });
 
             using (var scope = app.Services.CreateScope())
             {
