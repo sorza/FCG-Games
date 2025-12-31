@@ -1,3 +1,4 @@
+using FCG_Games.Api.Middlewares;
 using FCG_Games.Application.Shared;
 using FCG_Games.Infrastructure.Shared;
 using FCG_Games.Infrastructure.Shared.Context;
@@ -34,6 +35,8 @@ namespace FCG_Games.Api
             });
 
             var app = builder.Build();
+
+            app.UseMiddleware<CorrelationIdMiddleware>();
 
             app.UseExceptionHandler(errorApp =>
             {

@@ -10,17 +10,18 @@ namespace FCG_Games.Api.Controllers
     public class GameController(IGameService service) : ControllerBase
     {
         /// <summary>
-        /// Cadastra um novo jogo.
+        /// Solicita o cadastro de um novo jogo.
         /// </summary>
         /// <param name="request">Dados necessários para o cadastro do jogo.</param>
         /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>       
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]       
         [HttpPost]
         public async Task<IResult> CreateGameAsync([FromBody] GameRequest request, CancellationToken cancellation = default)
         {            
-            var result = await service.CreateGameAsync(request, cancellation);
+            var correlationId = HttpContext.Items["CorrelationId"]?.ToString();
+            var result = await service.CreateGameAsync(request, correlationId!, cancellation);
 
             if (result.IsFailure)
             {
@@ -31,7 +32,7 @@ namespace FCG_Games.Api.Controllers
                 };
             }
 
-            return TypedResults.Created($"/games/{result.Value.Id}", result.Value);
+            return TypedResults.Accepted($"/games/{result.Value.Id}", new {Game = result.Value, CorrelationId = correlationId});
         }
 
         /// <summary>
@@ -71,45 +72,47 @@ namespace FCG_Games.Api.Controllers
         =>  TypedResults.Ok(await service.GetAllGamesAsync(cancellation));
 
         /// <summary>
-        /// Remove um jogo pelo seu ID.
+        /// Solicita a exclusão de um jogo pelo seu ID.
         /// </summary>
         /// <param name="id">Id do jogo a ser removido</param>
         /// <param name="cancellation">Token para monitorar o cancelamento da requisi��o.</param>        
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:guid}")]
         public async Task<IResult> DeleteGameAsync(Guid id, CancellationToken cancellation = default)
         {
             
-            var result = await service.DeleteGameAsync(id, cancellation);
+            var correlationId = HttpContext.Items["CorrelationId"]?.ToString();
+            var result = await service.DeleteGameAsync(id, correlationId!, cancellation);
 
             if (result.IsFailure)
             {
                 return result.Error.Code switch
                 {
-                    "404" => TypedResults.Conflict(new Error("404", result.Error.Message)),
+                    "404" => TypedResults.NotFound(new Error("404", result.Error.Message)),
                     _ => TypedResults.BadRequest(new Error("400", result.Error.Message))
                 };
             }
 
-            return TypedResults.NoContent();
+            return TypedResults.Accepted( $"/games/status/{correlationId}", new { GameId = id, CorrelationId = correlationId } );
         }
 
         /// <summary>
-        /// Atualiza os dados de um jogo pelo seu ID.
+        /// Solicita atualização dos dados de um jogo pelo seu ID.
         /// </summary>
         /// <param name="id">Id do jogo a ser atualizado </param>
         /// <param name="request">Novos dados que serão atribu�dos ao jogo</param>
         /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>    
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut("{id:guid}")]
         public async Task<IResult> UpdateGameAsync(Guid id, [FromBody] GameRequest request,  CancellationToken cancellation = default)
         {           
-            var result = await service.UpdateGameAsync(id, request, cancellation);
+            var correlationId = HttpContext.Items["CorrelationId"]?.ToString();
+            var result = await service.UpdateGameAsync(id, request, correlationId!, cancellation);
 
             if (result.IsFailure)
             {
@@ -121,7 +124,7 @@ namespace FCG_Games.Api.Controllers
                 };
             }
 
-            return TypedResults.Ok(result.Value);
+            return TypedResults.Accepted($"/games/status/{correlationId}", new { Game = result.Value, CorrelationId = correlationId });
         }
     }
 }

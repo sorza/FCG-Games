@@ -47,6 +47,8 @@ namespace FCG_Games.Domain.Games.Entities
             if(!Enum.IsDefined(typeof(EGenre), genre))
                 throw new ArgumentException(ErrorMessage.Game.GenderRequired);
 
+            //Criar evento para criação de jogo
+
             return new Game(Guid.NewGuid(), title, price, launchYear, developer, genre);
         }
 
