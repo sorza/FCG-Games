@@ -1,5 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
-using FCG.Shared.Contracts.Events.Games;
+using FCG.Shared.Contracts.Events.Domain.Games;
 using FCG_Games.Application.Shared.Interfaces;
 using FCG_Games.Domain.Games.Entities;
 using FCG_Games.Domain.Games.Enums;

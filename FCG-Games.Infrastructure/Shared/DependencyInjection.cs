@@ -1,9 +1,9 @@
 ﻿using Azure.Messaging.ServiceBus;
+using FCG.Shared.Contracts.Events.Publisher;
+using FCG.Shared.Contracts.Events.Store;
 using FCG.Shared.Contracts.Interfaces;
 using FCG_Games.Application.Shared.Interfaces;
-using FCG_Games.Infrastructure.Games.Events;
 using FCG_Games.Infrastructure.Games.Repositories;
-using FCG_Games.Infrastructure.Mongo;
 using FCG_Games.Infrastructure.Shared.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,15 +30,19 @@ namespace FCG_Games.Infrastructure.Shared
                 return new ServiceBusEventPublisher(client, topic!);
             });
 
-            services.AddSingleton<IMongoClient>(sp =>
+            var mongoString = configuration["MongoSettings:ConnectionString"];
+            var mongoDb = configuration["MongoSettings:Database"];
+            var mongoCollection = configuration["MongoSettings:Collection"];
+
+            services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoString));
+
+            services.AddScoped<IEventStore>(sp =>
             {
-                var mongoString = configuration["MongoSettings:ConnectionString"];
-                return new MongoClient(mongoString);
+                var client = sp.GetRequiredService<IMongoClient>();
+                return new MongoEventStore(client, mongoDb!, mongoCollection!);
             });
 
-
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<IEventStore, MongoEventStore>();
 
             return services;
         }
