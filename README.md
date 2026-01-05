@@ -1,55 +1,76 @@
-# FCG-Games
+ï»¿# FCG-Games
 
-Microserviço de gerenciamento de jogos escrito em .NET 8. Projeto organizado em camadas (`Api`, `Application`, `Domain`, `Infrastructure`, `Consumer`) e integrado ao Azure Service Bus para processamento de eventos assíncronos.
+O projeto **FCG-Games** faz parte de um ecossistema de microsserviÃ§os voltado para gerenciamento de jogos e suas bibliotecas.  
+Ele foi desenvolvido com foco em **event sourcing**, **arquitetura orientada a eventos** e **integraÃ§Ã£o assÃ­ncrona** via mensageria.
 
-## Visão geral
+---
 
-Este repositório implementa o ciclo de vida de jogos (criação, atualização e exclusão) com arquitetura em camadas e comunicação orientada a eventos. A solução adota princípios inspirados em Domain?Driven Design (DDD) e separa responsabilidades entre apresentação, aplicação, domínio e infraestrutura.
+## Tecnologias Utilizadas
+- **.NET 8 / ASP.NET Core** â†’ APIs modernas e performÃ¡ticas.
+- **Entity Framework Core** â†’ persistÃªncia e abstraÃ§Ã£o de acesso ao banco de dados SQL Server.
+- **MongoDB** â†’ armazenamento de eventos (Event Store).
+- **Azure Service Bus** â†’ mensageria baseada em tÃ³picos e subscriptions.
+- **Docker** â†’ containerizaÃ§Ã£o e execuÃ§Ã£o isolada dos microsserviÃ§os.
+- **Swagger / Swashbuckle** â†’ documentaÃ§Ã£o interativa da API.
 
-## Tecnologias principais
+---
 
-- `.NET 8` (C# 12)
-- `Azure Service Bus` (Topics & Subscriptions)
-- `System.Text.Json` para (de)serialização
-- `Microsoft.Extensions.Hosting` / `IHostedService` para o Worker Service
-- `ILogger` (Microsoft.Extensions.Logging) para logging estruturado
-- Injeção de dependência do ASP.NET Core (`IServiceCollection`, `IServiceScopeFactory`)
-- Padrão `Repository` para abstração de persistência
-- `ServiceBusProcessor` para processamento concorrente de mensagens
+## Arquitetura
+- **MicrosserviÃ§os** â†’ cada contexto (Games, Users, Libraries, Payments) Ã© isolado e independente.
+- **Event-Driven Architecture** â†’ comunicaÃ§Ã£o entre serviÃ§os via eventos publicados em tÃ³picos do Service Bus.
+- **Event Sourcing** â†’ todas as mudanÃ§as de estado dos jogos sÃ£o registradas como eventos imutÃ¡veis.
+- **Camadas bem definidas**:
+  - **API** â†’ exposiÃ§Ã£o dos endpoints REST.
+  - **Application** â†’ regras de negÃ³cio e orquestraÃ§Ã£o.
+  - **Infrastructure** â†’ persistÃªncia, mensageria e integraÃ§Ãµes externas.
+  - **Domain** â†’ entidades e lÃ³gica de domÃ­nio.
 
-## Arquitetura e padrões adotados
+---
 
-- Camadas bem definidas:
-  - `FCG-Games.Api` — apresentação / endpoints HTTP.
-  - `FCG-Games.Application` — casos de uso e orquestração.
-  - `FCG-Games.Domain` — entidades, agregados, enums (ex.: `EGenre`) e regras de negócio.
-  - `FCG-Games.Infrastructure` — implementações de repositório e integrações externas.
-  - `FCG-Games.Consumer` — Worker Service que consome eventos do Service Bus.
+## PadrÃµes e Designs
+- **Repository Pattern** â†’ abstraÃ§Ã£o do acesso a dados.
+- **Dependency Injection** â†’ desacoplamento e facilidade de testes.
+- **Middleware personalizado** â†’ tratamento global de exceÃ§Ãµes e correlaÃ§Ã£o de requisiÃ§Ãµes.
+- **Event Publisher/Consumer** â†’ produtores e consumidores de eventos no Azure Service Bus.
+- **IdempotÃªncia** â†’ prevenÃ§Ã£o de duplicidade no processamento de eventos.
+- **Dead Letter Queue (DLQ)** â†’ resiliÃªncia e anÃ¡lise de mensagens problemÃ¡ticas.
 
-- Padrões e práticas:
-  - DDD-inspired: entidades e regras de negócio concentradas na camada `Domain`.
-  - Repository Pattern para desacoplar persistência da lógica de domínio.
-  - Event-driven architecture: produtores publicam eventos (`GameCreated`, `GameUpdated`, `GameDeleted`) e consumidores aplicam mudanças de forma assíncrona.
-  - Uso de `IServiceScopeFactory` dentro do consumer para resolver serviços com escopo durante o processamento de cada mensagem.
-  - Tratamento explícito de conversões (ex.: `string` ? `EGenre` com `Enum.TryParse`) e validações (ex.: `Guid.TryParse`).
+---
 
-## Resiliência e operações idempotentes
+## Fluxo de Eventos
+1. **CriaÃ§Ã£o/remoÃ§Ã£o de jogos** gera eventos (`GameCreated`, `GameRemoved`).  
+2. Os eventos sÃ£o persistidos no **MongoDB (Event Store)**.  
+3. Os eventos sÃ£o publicados no **Azure Service Bus (games-topic)**.  
+4. Outros microsserviÃ§os (como **Libraries**) consomem esses eventos:
+   - Se um **Game** for removido â†’ ele Ã© automaticamente removido de todas as bibliotecas vinculadas.
 
-- O consumer confirma mensagens (`CompleteMessageAsync`) somente após processamento bem-sucedido.
-- Recomenda-se implementar idempotência no repositório (verificação por `AggregateId`) para evitar efeitos duplicados em reenvios de eventos.
-- Configure `ServiceBusProcessorOptions` (ex.: `MaxConcurrentCalls`, `PrefetchCount`) conforme necessidade de throughput e recursos.
+---
 
-## Contratos e eventos
+## Observabilidade
+- **Logs estruturados** com `CorrelationId` para rastrear requisiÃ§Ãµes e eventos.  
+- **Swagger** para documentaÃ§Ã£o e testes de endpoints.  
+- **GlobalExceptionMiddleware** para captura e padronizaÃ§Ã£o de erros.
 
-Eventos relevantes:
-- `GameCreated` — payload para criação de jogo.
-- `GameUpdated` — payload para atualização.
-- `GameDeleted` — payload para remoção.
+---
 
-Os contratos estão no namespace/pacote `FCG.Shared.Contracts.Events.Domain.Games`. Garanta compatibilidade de contrato entre produtores e consumidores.
+## CompetÃªncias demonstradas
+- MicrosserviÃ§os  
+- Event Sourcing  
+- Event-Driven Architecture (EDA)  
+- Azure Service Bus  
+- MongoDB (Event Store)  
+- Entity Framework Core  
+- .NET 8 / ASP.NET Core  
+- Repository Pattern  
+- Dependency Injection  
+- Middleware personalizado  
+- IdempotÃªncia  
+- Docker  
+- Swagger
 
-## Configuração
 
-Recomenda-se usar __User Secrets__ em desenvolvimento e Azure Key Vault em produção.
-
-Exemplo de configuração (`appsettings.json` ou secrets):
+## Objetivo
+Este projeto foi desenvolvido como parte de um portfÃ³lio pessoal para demonstrar:
+- Conhecimento em **arquitetura de microsserviÃ§os**.  
+- AplicaÃ§Ã£o prÃ¡tica de **event sourcing** e **mensageria assÃ­ncrona**.  
+- Uso de **padrÃµes de projeto** e boas prÃ¡ticas de engenharia de software.  
