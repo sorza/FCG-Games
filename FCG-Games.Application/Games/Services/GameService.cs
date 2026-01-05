@@ -94,7 +94,17 @@ namespace FCG_Games.Application.Games.Services
 
             game.Update(request.Title, request.Price, request.LaunchYear, request.Developer, request.Genre);          
 
+            var events = await eventStore.GetEventsAsync(id.ToString());
+            var currentVersion = events.Count;
+
             var evt = new GameUpdatedEvent(game.Id.ToString(), game.Title, game.Price, game.LaunchYear, game.Developer, game.Genre.ToString());
+
+            await eventStore.AppendAsync(
+                   aggregateId: game.Id.ToString(),
+                   evt: evt,
+                   version: currentVersion, 
+                   correlationId: correlationId);
+
             await publisher.PublishAsync(evt, "GameUpdated", correlationId);
 
             return Result.Success(Parse(game));

@@ -2,8 +2,6 @@ using FCG_Games.Api.Middlewares;
 using FCG_Games.Application.Shared;
 using FCG_Games.Infrastructure.Shared;
 using FCG_Games.Infrastructure.Shared.Context;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -14,7 +12,7 @@ namespace FCG_Games.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.WebHost.UseUrls("http://0.0.0.0:80");
+           // builder.WebHost.UseUrls("http://0.0.0.0:80");
             
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
@@ -29,10 +27,10 @@ namespace FCG_Games.Api
                 c.IncludeXmlComments(xmlPath);
             });
 
-            builder.WebHost.ConfigureKestrel(options =>
+           /* builder.WebHost.ConfigureKestrel(options =>
             {
                 options.ListenAnyIP(80); 
-            });
+            });*/
 
             var app = builder.Build();
 
