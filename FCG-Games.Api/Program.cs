@@ -30,7 +30,8 @@ namespace FCG_Games.Api
            /* builder.WebHost.ConfigureKestrel(options =>
             {
                 options.ListenAnyIP(80); 
-            });*/
+            });
+           */
 
             var app = builder.Build();
 
@@ -63,15 +64,6 @@ namespace FCG_Games.Api
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-
-            app.MapGet("/health", () =>
-            {
-                return Results.Ok(new
-                {
-                    status = "Healthy",
-                    timestamp = DateTime.UtcNow
-                });
-            });
             
             app.Run();
         }

@@ -66,10 +66,13 @@ namespace FCG_Games.Api.Controllers
         /// Busca todos os jogos cadastrados.
         /// </summary>
         /// <param name="cancellation">Token para monitorar o cancelamento da requisiçãoo.</param>       
-        [ProducesResponseType(StatusCodes.Status200OK)]       
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<IResult> GetAllGamesAsync(CancellationToken cancellation = default)
-        =>  TypedResults.Ok(await service.GetAllGamesAsync(cancellation));
+        {
+            var result = await service.GetAllGamesAsync(cancellation);
+            return TypedResults.Ok(result.Value);
+        }
 
         /// <summary>
         /// Solicita a exclusão de um jogo pelo seu ID.

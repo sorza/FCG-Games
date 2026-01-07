@@ -43,7 +43,7 @@ namespace FCG_Games.Application.Games.Services
         {
             var game = await GetGameByIdAsync(id, cancellationToken);
 
-            if(game.Value is null)
+            if(game.IsFailure)
                 return Result.Failure(new Error("404", "Jogo não encontrado"));           
 
             var events = await eventStore.GetEventsAsync(id.ToString());
