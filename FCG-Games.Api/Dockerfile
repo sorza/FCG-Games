@@ -8,7 +8,6 @@ COPY ["FCG-Games.Domain/FCG-Games.Domain.csproj", "FCG-Games.Domain/"]
 	
 RUN dotnet restore "FCG-Games.Api/FCG-Games.Api.csproj"
 
-# Copy everything and publish
 COPY . .
 WORKDIR /src/FCG-Games.Api
 RUN dotnet publish "FCG-Games.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
