@@ -5,7 +5,6 @@ COPY ["FCG-Games.Api/FCG-Games.Api.csproj", "FCG-Games.Api/"]
 COPY ["FCG-Games.Application/FCG-Games.Application.csproj", "FCG-Games.Application/"]
 COPY ["FCG-Games.Infrastructure/FCG-Games.Infrastructure.csproj", "FCG-Games.Infrastructure/"]
 COPY ["FCG-Games.Domain/FCG-Games.Domain.csproj", "FCG-Games.Domain/"]
-COPY ["FCG-Games.Consumer/FCG-Games.Consumer.csproj", "FCG-Games.Consumer/"]
 	
 RUN dotnet restore "FCG-Games.Api/FCG-Games.Api.csproj"
 
