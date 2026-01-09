@@ -5,6 +5,9 @@ on:
     branches: [ main, develop ]
     paths:
       - 'FCG-Games.Consumer/**'
+      - 'FCG-Games.Application/**'
+      - 'FCG-Games.Domain/**'
+      - 'FCG-Games.Infrastructure/**'
       - '.github/workflows/games-consumer-ci.yml'
 
 jobs:
