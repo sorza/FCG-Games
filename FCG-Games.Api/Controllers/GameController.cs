@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FCG_Games.Api.Controllers
 {
     [ApiController]
-    [Route("games")]
+    [Route("api")]
     public class GameController(IGameService service) : ControllerBase
     {
         /// <summary>
