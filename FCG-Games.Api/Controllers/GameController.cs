@@ -1,12 +1,14 @@
 using FCG.Shared.Contracts.Results;
 using FCG_Games.Application.Games.Requests;
 using FCG_Games.Application.Shared.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG_Games.Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize]
     public class GameController(IGameService service) : ControllerBase
     {
         /// <summary>
@@ -16,7 +18,8 @@ namespace FCG_Games.Api.Controllers
         /// <param name="cancellation">Token para monitorar o cancelamento da requisição.</param>       
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]       
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IResult> CreateGameAsync([FromBody] GameRequest request, CancellationToken cancellation = default)
         {            
@@ -82,6 +85,7 @@ namespace FCG_Games.Api.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:guid}")]
         public async Task<IResult> DeleteGameAsync(Guid id, CancellationToken cancellation = default)
         {
@@ -111,6 +115,7 @@ namespace FCG_Games.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:guid}")]
         public async Task<IResult> UpdateGameAsync(Guid id, [FromBody] GameRequest request,  CancellationToken cancellation = default)
         {           
