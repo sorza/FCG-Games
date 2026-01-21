@@ -47,6 +47,7 @@ namespace FCG_Games.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("{id:guid}")]
+        [AllowAnonymous]
         public async Task<IResult> GetGameByIdAsync(Guid id, CancellationToken cancellation = default)
         {
             
@@ -71,6 +72,7 @@ namespace FCG_Games.Api.Controllers
         /// <param name="cancellation">Token para monitorar o cancelamento da requisiçãoo.</param>       
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IResult> GetAllGamesAsync(CancellationToken cancellation = default)
         {
             var result = await service.GetAllGamesAsync(cancellation);
