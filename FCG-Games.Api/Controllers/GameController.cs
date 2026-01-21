@@ -136,5 +136,13 @@ namespace FCG_Games.Api.Controllers
 
             return TypedResults.Accepted($"/games/status/{correlationId}", new { Game = result.Value, CorrelationId = correlationId });
         }
+
+        /// <summary>
+        /// Retorna 220 se a aplicação estiver saudável.
+        /// </summary>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        [HttpGet("/health")]
+        public async Task<IResult> Health() => TypedResults.Ok();
     }
 }
