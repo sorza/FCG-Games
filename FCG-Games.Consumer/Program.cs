@@ -14,6 +14,11 @@ namespace FCG_Games.Consumer
             var builder = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddApplicationInsightsTelemetryWorkerService(options =>
+                    {
+                        options.ConnectionString = context.Configuration["ApplicationInsights:ConnectionString"];
+                    });
+
                     services.AddDbContext<GamesDbContext>(options =>
                         options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
 
