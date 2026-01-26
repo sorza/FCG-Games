@@ -95,7 +95,7 @@ namespace FCG_Games.Api
             {
                 using (var scope = app.Services.CreateScope())
                 {
-                    var db = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+                    var db = scope.ServiceProvider.GetRequiredService<GamesDbContext>();
 
                     var retries = 5;
                     while (retries > 0)
