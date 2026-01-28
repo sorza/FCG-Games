@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: games-api
+  namespace: games
+  labels:
+    app: games-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: games-api
+  template:
+    metadata:
+      labels:
+        app: games-api
+    spec:
+      containers:
+      - name: games-api
+        image: alexandresorza/fcg-games-api:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: fcg-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ApplicationInsights__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: fcg-secrets
+              key: appinsights-connection-string
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: fcg-secrets
+              key: sql-games-connection
+        - name: ServiceBus__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: fcg-secrets
+              key: servicebus-connection
+        - name: ServiceBus__Topics__Games
+          valueFrom:
+            configMapKeyRef:
+              name: fcg-config
+              key: TOPIC_GAMES
+        - name: MongoSettings__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: fcg-secrets
+              key: cosmosdb-connection
+        - name: MongoSettings__Database
+          value: "EventStoreDb"
+        - name: MongoSettings__Collection
+          value: "Events"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "fcg-keyvault-secrets"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: games-api-service
+  namespace: games
+spec:
+  selector:
+    app: games-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+

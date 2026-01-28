@@ -52,6 +52,6 @@ jobs:
     
     - name: Deploy to AKS
       run: |
-        kubectl apply -f ../k8s/shared/secretproviderclass-games.yaml
-        kubectl apply -f ../k8s/games/consumer/
+        kubectl apply -f k8s/secretproviderclass-games.yaml
+        kubectl apply -f k8s/consumer/
         kubectl rollout status deployment/games-consumer -n games --timeout=300s
