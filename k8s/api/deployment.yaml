@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: games-api
-  namespace: fcg-games
+  namespace: games
   labels:
     app: games-api
 spec:
