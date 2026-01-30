@@ -18,6 +18,7 @@ spec:
       containers:
       - name: games-api
         image: alexandresorza/fcg-games-api:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         volumeMounts:
