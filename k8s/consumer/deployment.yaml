@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: games-consumer
-  namespace: games
+  namespace: fcg-games
   labels:
     app: games-consumer
 spec:
